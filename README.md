@@ -1,5 +1,5 @@
 # s3b
-
+```
 S3 benchmarking tool
 NAME:
    s3b - S3/Object Store benchmarking tool
@@ -29,3 +29,4 @@ GLOBAL OPTIONS:
    --matrix value, -m value         Comma separated key value pairs of filename=size to use in the testing. [$S3_TEST_MATRIX]
    --help, -h                       show help
    --version, -v                    print the version
+```
