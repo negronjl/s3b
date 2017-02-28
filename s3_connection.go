@@ -19,6 +19,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 	// S3 Server
 	s3_server := c.String("server")
 	if len(s3_server) < 1 {
+		cli.ShowAppHelp(c)
 		log.Fatalln("S3 server not defined!")
 	} else {
 		if debug {
@@ -29,6 +30,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 	// Most S3 servers need a region
 	s3_region := c.String("region")
 	if len(s3_region) < 1 {
+		cli.ShowAppHelp(c)
 		log.Fatalln("S3 region not defined!")
 	} else {
 		if debug {
@@ -39,6 +41,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 	// S3 Access Key
 	s3_access_key := c.String("access-key")
 	if len(s3_access_key) < 1 {
+		cli.ShowAppHelp(c)
 		log.Fatalln("S3 Access Key not defined!")
 	} else {
 		if debug {
@@ -49,6 +52,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 	// S3 Secret Key
 	s3_secret_key := c.String("secret-key")
 	if len(s3_secret_key) < 1 {
+		cli.ShowAppHelp(c)
 		log.Fatalln("S3 Secret Key not defined!")
 	} else {
 		if debug {
@@ -85,7 +89,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 		minioClient, err = minio.New(s3_server, s3_access_key, s3_secret_key, ssl)
 	}
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("Error connecting to S3 server.\n", err)
 	} else {
 		if debug {
 			log.Printf("S3 client initialized")
