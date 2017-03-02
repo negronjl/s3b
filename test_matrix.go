@@ -81,11 +81,7 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 		}
 	} else { // File found
 		if debug {
-			f, err := os.Stat(element_file.Name())
-			if err != nil {
-				log.Fatalf("Unable to stat file: %s", element_file.Name())
-			}
-			element_size = uint64(f.Size())
+			element_size = uint64(element_file.Size())
 			log.Printf("Using existing file: %s", element_file.Name(), element_size)
 		}
 	}
