@@ -23,7 +23,7 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 		log.Fatalln("Unable to create temp file!")
 	} else {
 		if debug {
-			log.Printf("Created temp file [%s]", element_file)
+			log.Printf("Created temp file [%s]", element_file.Name())
 		}
 	}
 
@@ -33,17 +33,33 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 		log.Fatalf("Unable to convert [%s] to integer\n", element[1])
 	}
 
-	// Create a byte array and fill it with random data
-	b := make([]byte, element_size)
-	_, err = rand.Read(b)
-	if err != nil {
-		log.Fatalln("Error reading random data")
-	}
+	// Fill the file with random data
+	bytes_written := uint64(0)
+	chunk_size := 1000000
+	for bytes_written < element_size {
+		var byte_array []byte
+		bytes_left := element_size - bytes_written
 
-	// Fill the temp file with random data
-	_, err = element_file.Write(b)
-	if err != nil {
-		log.Fatalln("Could not write temporary file")
+		// Create a byte array
+		if bytes_left < uint64(chunk_size) {
+			byte_array = make([]byte, bytes_left)
+		} else {
+			byte_array = make([]byte, chunk_size)
+		}
+
+		// Fill the byte array with random data
+		_, err = rand.Read(byte_array)
+		if err != nil {
+			log.Fatalln("Error reading random data")
+		}
+
+		// Fill the temp file with random data
+		_, err = element_file.Write(byte_array)
+		if err != nil {
+			log.Fatalln("Could not write temporary file")
+		}
+		bytes_written += uint64(len(byte_array))
+		log.Printf("Wrote %d/%d bytes to: %s", bytes_written, element_size, element_file.Name())
 	}
 
 	// Close the temporary file

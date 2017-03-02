@@ -15,6 +15,9 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 
 	// Debug information
 	debug := c.Bool("debug")
+	if debug {
+		log.Println("Debug enabled")
+	}
 
 	// S3 Server
 	s3_server := c.String("server")
