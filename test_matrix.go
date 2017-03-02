@@ -9,63 +9,85 @@ import (
 	"strconv"
 	"strings"
 	"github.com/urfave/cli"
+	"os"
 )
 
 func initialize_test_element(agent_id string, tag_size_string string, debug bool) test_element {
+
+	// Variables
+	var element_size uint64
 
 	// Parse the string
 	element := strings.Split(tag_size_string, "=")
 	element_tag := strings.TrimSpace(element[0])
 
-	// Create a temporary file
-	element_file, err := ioutil.TempFile("", fmt.Sprintf("%s_%s", agent_id, element_tag))
-	if err != nil {
-		log.Fatalln("Unable to create temp file!")
-	} else {
+	// See if the file exists
+	element_file, err := os.Stat(element_tag)
+	if err != nil { // File doesn't exist
+
+		// Parse the element size
+		element_size, err := strconv.ParseUint(element[1], 0, 0)
+		if err != nil {
+			log.Fatalf("Unable to convert [%s] to integer\n", element[1])
+		}
+
 		if debug {
-			log.Printf("Created temp file [%s]", element_file.Name())
+			log.Printf("Creating temp file")
 		}
-	}
 
-	// Parse the element size
-	element_size, err := strconv.ParseUint(element[1], 0, 0)
-	if err != nil {
-		log.Fatalf("Unable to convert [%s] to integer\n", element[1])
-	}
-
-	// Fill the file with random data
-	bytes_written := uint64(0)
-	chunk_size := 1000000
-	for bytes_written < element_size {
-		var byte_array []byte
-		bytes_left := element_size - bytes_written
-
-		// Create a byte array
-		if bytes_left < uint64(chunk_size) {
-			byte_array = make([]byte, bytes_left)
+		// Create a temporary file
+		element_file, err := ioutil.TempFile("", fmt.Sprintf("%s_%s", agent_id, element_tag))
+		if err != nil {
+			log.Fatalln("Unable to create temp file!")
 		} else {
-			byte_array = make([]byte, chunk_size)
+			if debug {
+				log.Printf("Created temp file [%s]", element_file.Name())
+			}
 		}
 
-		// Fill the byte array with random data
-		_, err = rand.Read(byte_array)
-		if err != nil {
-			log.Fatalln("Error reading random data")
-		}
+		// Fill the file with random data
+		bytes_written := uint64(0)
+		chunk_size := 1000000
+		for bytes_written < element_size {
+			var byte_array []byte
+			bytes_left := element_size - bytes_written
 
-		// Fill the temp file with random data
-		_, err = element_file.Write(byte_array)
-		if err != nil {
-			log.Fatalln("Could not write temporary file")
-		}
-		bytes_written += uint64(len(byte_array))
-		log.Printf("Wrote %d/%d bytes to: %s", bytes_written, element_size, element_file.Name())
-	}
+			// Create a byte array
+			if bytes_left < uint64(chunk_size) {
+				byte_array = make([]byte, bytes_left)
+			} else {
+				byte_array = make([]byte, chunk_size)
+			}
 
-	// Close the temporary file
-	err = element_file.Close()
-	if err != nil {
-		log.Fatalln("Could not close the temporary file object!")
+			// Fill the byte array with random data
+			_, err = rand.Read(byte_array)
+			if err != nil {
+				log.Fatalln("Error reading random data")
+			}
+
+			// Fill the temp file with random data
+			_, err = element_file.Write(byte_array)
+			if err != nil {
+				log.Fatalln("Could not write temporary file")
+			}
+			bytes_written += uint64(len(byte_array))
+			log.Printf("Wrote %d/%d bytes to: %s", bytes_written, element_size, element_file.Name())
+
+			// Close the temporary file
+			err = element_file.Close()
+			if err != nil {
+				log.Fatalln("Could not close the temporary file object!")
+			}
+		}
+	} else { // File found
+		if debug {
+			f, err := os.Stat(element_file.Name())
+			if err != nil {
+				log.Fatalf("Unable to stat file: %s", element_file.Name())
+			}
+			element_size = uint64(f.Size())
+			log.Printf("Using existing file: %s", element_file.Name(), element_size)
+		}
 	}
 
 	if debug {
