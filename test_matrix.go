@@ -82,6 +82,11 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 func initialize_test_matrix(agent_id string, connection_object s3_connection, c *cli.Context) test_matrix {
 	// Debug
 	debug := c.Bool("debug")
+	if debug {
+		log.Printf("Debug is enabled")
+	} else {
+		log.Printf("Debug disabled.")
+	}
 
 	// StatsD host
 	statsd_host := c.String("statsd")
@@ -96,7 +101,7 @@ func initialize_test_matrix(agent_id string, connection_object s3_connection, c 
 	statsd_app_prefix := c.String("prefix")
 	if len(statsd_app_prefix) < 1 {
 		statsd_app_prefix = "s3b"
-		log.Println("StatsD prefix not defined!  Using standard [%s] prefix", statsd_app_prefix)
+		log.Printf("StatsD prefix not defined!  Using standard [%s] prefix", statsd_app_prefix)
 	} else {
 		if debug {
 			log.Printf("StatsD prefix: [%s]", statsd_app_prefix)
