@@ -73,12 +73,11 @@ func s3b_action(c *cli.Context) error {
 
 	// Initialize environment
 	test_matrix := initialize_environment(c)
-	run_test(test_matrix)
 
-	//// Run tests
-	//for {
-	//	run_test(test_matrix)
-	//}
+	// Run tests
+	for {
+		run_test(test_matrix)
+	}
 	return nil
 }
 
