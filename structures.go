@@ -23,7 +23,7 @@ type test_element struct {
 
 type test_matrix struct {
 	agent_id          string
-	connection_object s3_connection
+	connection_object *s3_connection
 	test_elements     []test_element
 	statsd_client     *statsd.Client
 	debug             bool

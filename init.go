@@ -6,7 +6,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func initialize_environment(c *cli.Context) (test_matrix) {
+func initialize_environment(c *cli.Context) (*test_matrix) {
 	agent_id := uuid.NewV4().String()
 	if c.Bool("debug") {
 		log.Printf("Agent ID: [%s]", agent_id)

@@ -71,10 +71,14 @@ func s3b_flags() []cli.Flag {
 
 func s3b_action(c *cli.Context) error {
 
-	// Run tests
-	for {
-		run_test(initialize_environment(c))
-	}
+	// Initialize environment
+	test_matrix := initialize_environment(c)
+	run_test(test_matrix)
+
+	//// Run tests
+	//for {
+	//	run_test(test_matrix)
+	//}
 	return nil
 }
 

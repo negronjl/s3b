@@ -15,7 +15,8 @@ import (
 func initialize_test_element(agent_id string, tag_size_string string, debug bool) test_element {
 
 	// Variables
-	var element_size uint64
+	element_size := uint64(0)
+	element_filename := ""
 
 	// Parse the string
 	element := strings.Split(tag_size_string, "=")
@@ -78,26 +79,36 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 			if err != nil {
 				log.Fatalln("Could not close the temporary file object!")
 			}
+			if debug {
+				log.Println("Closed temp file")
+			}
+
+			// Update outer element_filename
+			element_filename = element_file.Name()
 		}
 	} else { // File found
 		if debug {
 			element_size = uint64(element_file.Size())
 			log.Printf("Using existing file: %s", element_file.Name(), element_size)
 		}
-	}
 
-	if debug {
-		log.Printf("Test Element: Tag: [%s], Filename: [%s], Size: [%s]", element_tag,
-			element_file.Name(), element_size)
+		// Update outer element_filename
+		element_filename = element_file.Name()
+
+		if debug {
+			log.Printf("Test Element: Tag: [%s], Filename: [%s], Size: [%d]", element_tag,
+				element_filename, element_size)
+		}
+
 	}
 
 	return test_element{
 		tag:          element_tag,
-		tmp_filename: element_file.Name(),
+		tmp_filename: element_filename,
 		file_size:    element_size}
 }
 
-func initialize_test_matrix(agent_id string, connection_object s3_connection, c *cli.Context) test_matrix {
+func initialize_test_matrix(agent_id string, connection_object *s3_connection, c *cli.Context) *test_matrix {
 	// Debug
 	debug := c.Bool("debug")
 
@@ -132,7 +143,7 @@ func initialize_test_matrix(agent_id string, connection_object s3_connection, c 
 	// Register this agent_id with StatsD
 	statsd_client.Increment("agent_id")
 
-	var test_elements []test_element
+	test_elements := make([]test_element,0)
 
 	// Matrix Directory
 	matrix_dir := c.String("matrix-dir")
@@ -172,7 +183,7 @@ func initialize_test_matrix(agent_id string, connection_object s3_connection, c 
 		}
 	}
 
-	return test_matrix{
+	return &test_matrix{
 		agent_id:          agent_id,
 		connection_object: connection_object,
 		test_elements:     test_elements,

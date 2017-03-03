@@ -11,7 +11,7 @@ import (
 // have been set.
 // Returns an s3_connection
 // On error, it log.Fatal an exits(1)
-func initialize_s3_connection(c *cli.Context) s3_connection {
+func initialize_s3_connection(c *cli.Context) *s3_connection {
 
 	// Debug information
 	debug := c.Bool("debug")
@@ -82,7 +82,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 	}
 
 	// Initialize minio client object.
-	var minioClient *minio.Client
+	minioClient := new(minio.Client)
 	var err error
 	if api_signature == "v2" {
 		minioClient, err = minio.NewV2(s3_server, s3_access_key, s3_secret_key, ssl)
@@ -99,7 +99,7 @@ func initialize_s3_connection(c *cli.Context) s3_connection {
 		}
 	}
 
-	return s3_connection{
+	return &s3_connection{
 		s3_server:     s3_server,
 		s3_region:     s3_region,
 		s3_access_key: s3_access_key,

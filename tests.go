@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func run_test(test_matrix test_matrix) {
+func run_test(test_matrix *test_matrix) {
 	// Initialize statsd
 	statsd_client := test_matrix.statsd_client
 
@@ -78,6 +78,9 @@ func run_test(test_matrix test_matrix) {
 		statsd_client.Increment(fmt.Sprintf("s3.stat.%s.count_total", test_element.tag))
 
 		// Download the file from S3
+		/*
+		TODO:  If test_element.tmp_filename == test_element
+		 */
 		timer = statsd_client.NewTiming()
 		if test_matrix.connection_object.minioClient.FGetObject(test_matrix.agent_id,
 			test_element.tag, test_element.tmp_filename) != nil {
@@ -136,4 +139,6 @@ func run_test(test_matrix test_matrix) {
 		timer.Send("bucket.delete.time")
 	}
 	statsd_client.Increment("bucket.delete.count_total")
+
+	//Cleanup
 }
