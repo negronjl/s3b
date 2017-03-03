@@ -100,11 +100,6 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 func initialize_test_matrix(agent_id string, connection_object s3_connection, c *cli.Context) test_matrix {
 	// Debug
 	debug := c.Bool("debug")
-	if debug {
-		log.Printf("Debug is enabled")
-	} else {
-		log.Printf("Debug disabled.")
-	}
 
 	// StatsD host
 	statsd_host := c.String("statsd")
@@ -152,8 +147,9 @@ func initialize_test_matrix(agent_id string, connection_object s3_connection, c 
 		}
 		var matrix_elements []string
 		for _, file := range files {
-			matrix_string += file.Name() + "=" + strconv.FormatInt(file.Size(), 10)
-			matrix_elements = append(matrix_elements, matrix_string)
+			element_string := file.Name() + "=" + strconv.FormatInt(file.Size(), 10)
+			matrix_elements = append(matrix_elements, element_string)
+
 		}
 		matrix_string = strings.Join(matrix_elements, ",")
 		if debug {
