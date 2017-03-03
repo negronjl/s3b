@@ -139,17 +139,41 @@ func initialize_test_matrix(agent_id string, connection_object s3_connection, c 
 
 	var test_elements []test_element
 
-	// This variable holds a set of key value pairs.
-	// The format is meant to be tag=size, tag=size, etc.
-	// tag is used as a measurement data point
-	// size is the size of the object to be used for testing
-	matrix_string := c.String("matrix")
-	if len(matrix_string) < 1 {
-		log.Fatalln("Test matrix not defined!")
-	}
+	// Matrix Directory
+	matrix_dir := c.String("matrix-dir")
+	var matrix_string string
+	if len(matrix_dir) > 0 { // Matrix directory defined
+		if debug {
+			log.Println("Processing matrix directory")
+		}
+		files, err := ioutil.ReadDir(matrix_dir)
+		if err != nil {
+			log.Fatalf("Could not read matrix-dir: %s", matrix_dir)
+		}
+		var matrix_elements []string
+		for _, file := range files {
+			matrix_string += file.Name() + "=" + strconv.FormatInt(file.Size(), 10)
+			matrix_elements = append(matrix_elements, matrix_string)
+		}
+		matrix_string = strings.Join(matrix_elements, ",")
+		if debug {
+			log.Printf("Calculated matrix-test of [%s] from matrix-dir of [%s]",
+				matrix_string,
+				matrix_dir)
+		}
+	} else { // Matrix directory not defined
+		// This variable holds a set of key value pairs.
+		// The format is meant to be filename=size, filename=size, etc.
+		// tag is used as a measurement data point
+		// size is the size of the object to be used for testing
+		matrix_string = c.String("matrix")
+		if len(matrix_string) < 1 {
+			log.Fatalln("Test matrix not defined!")
+		}
 
-	for _, element := range strings.Split(matrix_string, ",") {
-		test_elements = append(test_elements, initialize_test_element(agent_id, element, debug))
+		for _, element := range strings.Split(matrix_string, ",") {
+			test_elements = append(test_elements, initialize_test_element(agent_id, element, debug))
+		}
 	}
 
 	return test_matrix{

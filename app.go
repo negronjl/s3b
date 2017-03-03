@@ -61,6 +61,11 @@ func s3b_flags() []cli.Flag {
 			Usage:  "Comma separated key value pairs of filename=size to use in the testing.",
 			EnvVar: "S3_TEST_MATRIX",
 		},
+		cli.StringFlag{
+			Name:   "matrix-dir, M",
+			Usage:  "Directory containing the files to be used for testing.",
+			EnvVar: "S3_TEST_MATRIX_DIR",
+		},
 	}
 }
 
