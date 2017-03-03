@@ -73,19 +73,18 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 			}
 			bytes_written += uint64(len(byte_array))
 			log.Printf("Wrote %d/%d bytes to: %s", bytes_written, element_size, element_file.Name())
-
-			// Close the temporary file
-			err = element_file.Close()
-			if err != nil {
-				log.Fatalln("Could not close the temporary file object!")
-			}
-			if debug {
-				log.Println("Closed temp file")
-			}
-
-			// Update outer element_filename
-			element_filename = element_file.Name()
 		}
+		// Close the temporary file
+		err = element_file.Close()
+		if err != nil {
+			log.Fatalln("Could not close the temporary file object!")
+		}
+		if debug {
+			log.Println("Closed temp file")
+		}
+
+		// Update outer element_filename
+		element_filename = element_file.Name()
 	} else { // File found
 		if debug {
 			element_size = uint64(element_file.Size())
