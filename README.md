@@ -1,6 +1,5 @@
 # s3b
 ```
-S3 benchmarking tool
 NAME:
    s3b - S3/Object Store benchmarking tool
 
@@ -27,6 +26,8 @@ GLOBAL OPTIONS:
    --statsd value, -D value         StatsD server to which metrics will be sent (default: "s3b") [$S3_STATSD_HOST]
    --prefix value, -p value         Prefix to use with the StatsD metrics [$S3_STATSD_PREFIX]
    --matrix value, -m value         Comma separated key value pairs of filename=size to use in the testing. [$S3_TEST_MATRIX]
+   --matrix-dir value, -M value     Directory containing the files to be used for testing. [$S3_TEST_MATRIX_DIR]
    --help, -h                       show help
    --version, -v                    print the version
+
 ```
