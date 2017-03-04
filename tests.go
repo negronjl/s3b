@@ -9,6 +9,10 @@ func run_test(test_matrix *test_matrix) {
 	// Initialize statsd
 	statsd_client := test_matrix.statsd_client
 
+	// Register this agent_id with StatsD
+	statsd_client.Increment("agent_id")
+
+
 	// Create agent_id bucket
 	timer := statsd_client.NewTiming()
 	if test_matrix.connection_object.minioClient.MakeBucket(test_matrix.agent_id,
