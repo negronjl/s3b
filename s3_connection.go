@@ -84,11 +84,12 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 	// Initialize minio client object.
 	minioClient := new(minio.Client)
 	var err error
-	if api_signature == "v2" {
+	switch api_signature {
+	case "v2":
 		minioClient, err = minio.NewV2(s3_server, s3_access_key, s3_secret_key, ssl)
-	} else if api_signature == "v4" {
+	case "v4":
 		minioClient, err = minio.NewV4(s3_server, s3_access_key, s3_secret_key, ssl)
-	} else {
+	default:
 		minioClient, err = minio.New(s3_server, s3_access_key, s3_secret_key, ssl)
 	}
 	if err != nil {
