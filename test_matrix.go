@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/rand"
 	"fmt"
-	"gopkg.in/alexcesaro/statsd.v2"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -33,7 +32,7 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 		}
 
 		if debug {
-			log.Printf("Creating temp file")
+			log.Println("Creating temp file")
 		}
 
 		// Create a temporary file
@@ -88,7 +87,7 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 	} else { // File found
 		if debug {
 			element_size = uint64(element_file.Size())
-			log.Printf("Using existing file: %s", element_file.Name(), element_size)
+			log.Printf("Using existing file: %s (size: %d)", element_file.Name(), element_size)
 		}
 
 		// Update outer element_filename
@@ -107,42 +106,15 @@ func initialize_test_element(agent_id string, tag_size_string string, debug bool
 		file_size:    element_size}
 }
 
-func initialize_test_matrix(agent_id string, connection_object *s3_connection, c *cli.Context) *test_matrix {
+func initialize_test_matrix(agent_id string,
+	connection_object *s3_connection,
+	statsd_object *statsd_connection,
+	c *cli.Context) *test_matrix {
+
 	// Debug
 	debug := c.Bool("debug")
 
-	// StatsD host
-	statsd_host := c.String("statsd")
-	if len(statsd_host) < 1 {
-		log.Fatalln("StatsD host not defined!")
-	}
-	if debug {
-		log.Printf("StatsD host: %s", statsd_host)
-	}
-
-	// StatsD prefix
-	statsd_app_prefix := c.String("prefix")
-	if len(statsd_app_prefix) < 1 {
-		statsd_app_prefix = "s3b"
-		log.Printf("StatsD prefix not defined!  Using standard [%s] prefix", statsd_app_prefix)
-	} else {
-		if debug {
-			log.Printf("StatsD prefix: [%s]", statsd_app_prefix)
-		}
-	}
-
-	statsd_client, err := statsd.New(statsd.Address(statsd_host),
-		statsd.Prefix(statsd_app_prefix), statsd.ErrorHandler(func(err error) {
-			log.Fatalf("StatsD Error: %v", err)
-		}))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Register this agent_id with StatsD
-	statsd_client.Increment("agent_id")
-
-	test_elements := make([]test_element,0)
+	test_elements := make([]test_element, 0)
 
 	// Matrix Directory
 	matrix_dir := c.String("matrix-dir")
@@ -186,6 +158,6 @@ func initialize_test_matrix(agent_id string, connection_object *s3_connection, c
 		agent_id:          agent_id,
 		connection_object: connection_object,
 		test_elements:     test_elements,
-		statsd_client:     statsd_client,
+		statsd_object:     statsd_object,
 		debug:             debug}
 }

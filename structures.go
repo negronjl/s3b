@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/minio/minio-go"
-	"gopkg.in/alexcesaro/statsd.v2"
 )
 
 type s3_connection struct {
@@ -15,6 +14,13 @@ type s3_connection struct {
 	minioClient   *minio.Client
 }
 
+type statsd_connection struct {
+	host string
+	prefix string
+	client interface{}
+	datadog bool
+}
+
 type test_element struct {
 	tag          string
 	tmp_filename string
@@ -24,7 +30,7 @@ type test_element struct {
 type test_matrix struct {
 	agent_id          string
 	connection_object *s3_connection
+	statsd_object     *statsd_connection
 	test_elements     []test_element
-	statsd_client     *statsd.Client
 	debug             bool
 }

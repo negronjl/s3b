@@ -56,6 +56,11 @@ func s3b_flags() []cli.Flag {
 			Usage:  "Prefix to use with the StatsD metrics",
 			EnvVar: "S3_STATSD_PREFIX",
 		},
+		cli.BoolFlag{
+			Name:   "datadog, G",
+			Usage:  "Whether or not to assume we are connecting to DogStasD and use DataDog style tags",
+			EnvVar: "S3_DATADOG",
+		},
 		cli.StringFlag{
 			Name:   "matrix, m",
 			Usage:  "Comma separated key value pairs of filename=size to use in the testing.",

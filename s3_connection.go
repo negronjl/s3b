@@ -73,11 +73,11 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 	ssl := c.Bool("SSL")
 	if ssl {
 		if debug {
-			log.Printf("SSL enabled")
+			log.Println("SSL enabled")
 		}
 	} else {
 		if debug {
-			log.Printf("SSL disabled")
+			log.Println("SSL disabled")
 		}
 	}
 
@@ -96,7 +96,7 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 		log.Fatalln("Error connecting to S3 server.\n", err)
 	} else {
 		if debug {
-			log.Printf("S3 client initialized")
+			log.Println("S3 client initialized")
 		}
 	}
 
