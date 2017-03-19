@@ -25,6 +25,7 @@ GLOBAL OPTIONS:
    --debug, -d                      Print debug HTTP tracing information [$S3_DEBUG]
    --statsd value, -D value         StatsD server to which metrics will be sent (default: "s3b") [$S3_STATSD_HOST]
    --prefix value, -p value         Prefix to use with the StatsD metrics [$S3_STATSD_PREFIX]
+   --datadog, -G                    Whether or not to assume we are connecting to DogStasD and use DataDog style tags [$S3_DATADOG]
    --matrix value, -m value         Comma separated key value pairs of filename=size to use in the testing. [$S3_TEST_MATRIX]
    --matrix-dir value, -M value     Directory containing the files to be used for testing. [$S3_TEST_MATRIX_DIR]
    --help, -h                       show help
