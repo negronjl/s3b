@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/urfave/cli"
 	datadog "github.com/DataDog/datadog-go/statsd"
-	statsd "gopkg.in/alexcesaro/statsd.v2"
+	"github.com/urfave/cli"
+	"gopkg.in/alexcesaro/statsd.v2"
 	"time"
 )
 

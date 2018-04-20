@@ -15,9 +15,9 @@ type s3_connection struct {
 }
 
 type statsd_connection struct {
-	host string
-	prefix string
-	client interface{}
+	host    string
+	prefix  string
+	client  interface{}
 	datadog bool
 }
 

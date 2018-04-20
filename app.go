@@ -17,7 +17,7 @@ func s3b_flags() []cli.Flag {
 			Name:   "region, r",
 			Usage:  "S3 server region to use",
 			EnvVar: "S3_REGION",
-			Value: "us-east-1",
+			Value:  "us-east-1",
 		},
 		cli.StringFlag{
 			Name:   "access-key, A",
@@ -33,7 +33,7 @@ func s3b_flags() []cli.Flag {
 			Name:   "api-signature, a",
 			Usage:  "API Signature version (v2 or v4)",
 			EnvVar: "S3_API_SIGNATURE",
-			Value: "v4",
+			Value:  "v4",
 		},
 		cli.BoolFlag{
 			Name:   "SSL, S",
@@ -49,7 +49,7 @@ func s3b_flags() []cli.Flag {
 			Name:   "statsd, D",
 			Usage:  "StatsD server to which metrics will be sent",
 			EnvVar: "S3_STATSD_HOST",
-			Value: "s3b",
+			Value:  "s3b",
 		},
 		cli.StringFlag{
 			Name:   "prefix, p",

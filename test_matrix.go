@@ -3,12 +3,12 @@ package main
 import (
 	"crypto/rand"
 	"fmt"
+	"github.com/urfave/cli"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"strings"
-	"github.com/urfave/cli"
-	"os"
 )
 
 func initialize_test_element(agent_id string, tag_size_string string, debug bool) test_element {
