@@ -70,17 +70,15 @@ func initializeStatsdConnection(c *cli.Context) *statsdConnection {
 func (s statsdConnection) Increment(name string, tags []string, rate float64) error {
 	if s.datadog {
 		return s.client.(*datadog.Client).Incr(name, tags, rate)
-	} else {
-		s.client.(*statsd.Client).Increment(name)
-		return nil
 	}
+	s.client.(*statsd.Client).Increment(name)
+	return nil
 }
 
 func (s statsdConnection) Timing(name string, value time.Duration, tags []string, rate float64) error {
 	if s.datadog {
 		return s.client.(*datadog.Client).Timing(name, value, tags, rate)
-	} else {
-		s.client.(*statsd.Client).Timing(name, value)
-		return nil
 	}
+	s.client.(*statsd.Client).Timing(name, value)
+	return nil
 }
