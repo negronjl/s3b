@@ -6,10 +6,10 @@ import (
 	"log"
 )
 
-func initialize_environment(c *cli.Context) *test_matrix {
-	agent_id := uuid.NewV4().String()
+func initializeEnvironment(c *cli.Context) *testMatrix {
+	agentId := uuid.NewV4().String()
 	if c.Bool("debug") {
-		log.Printf("Agent ID: [%s]", agent_id)
+		log.Printf("Agent ID: [%s]", agentId)
 	}
-	return initialize_test_matrix(agent_id, initialize_s3_connection(c), initialize_statsd_connection(c), c)
+	return initializeTestMatrix(agentId, initializeS3Connection(c), initializeStatsdConnection(c), c)
 }

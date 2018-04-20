@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func initialize_statsd_connection(c *cli.Context) *statsd_connection {
+func initializeStatsdConnection(c *cli.Context) *statsdConnection {
 	// Debug information
 	debug := c.Bool("debug")
 
 	// DataDog enabled?
-	datadog_enabled := c.Bool("datadog")
-	if datadog_enabled {
+	datadogEnabled := c.Bool("datadog")
+	if datadogEnabled {
 		log.Println("DataDog enabled.")
 	}
 
@@ -40,16 +40,16 @@ func initialize_statsd_connection(c *cli.Context) *statsd_connection {
 	}
 
 	// Client
-	var statsd_client interface{}
+	var statsDClient interface{}
 	var err error
-	if datadog_enabled {
-		statsd_client, err = datadog.New(host)
+	if datadogEnabled {
+		statsDClient, err = datadog.New(host)
 		if err != nil {
 			log.Fatal(err)
 		}
-		statsd_client.(*datadog.Client).Namespace = prefix + "."
+		statsDClient.(*datadog.Client).Namespace = prefix + "."
 	} else {
-		statsd_client, err = statsd.New(statsd.Address(host),
+		statsDClient, err = statsd.New(statsd.Address(host),
 			statsd.Prefix(prefix), statsd.ErrorHandler(func(err error) {
 				log.Fatalf("StatsD Error: %v", err)
 			}))
@@ -59,15 +59,15 @@ func initialize_statsd_connection(c *cli.Context) *statsd_connection {
 	}
 
 	// Return the new structure
-	return &statsd_connection{
+	return &statsdConnection{
 		host:    host,
 		prefix:  prefix,
-		client:  statsd_client,
-		datadog: datadog_enabled,
+		client:  statsDClient,
+		datadog: datadogEnabled,
 	}
 }
 
-func (s statsd_connection) Increment(name string, tags []string, rate float64) error {
+func (s statsdConnection) Increment(name string, tags []string, rate float64) error {
 	if s.datadog {
 		return s.client.(*datadog.Client).Incr(name, tags, rate)
 	} else {
@@ -76,7 +76,7 @@ func (s statsd_connection) Increment(name string, tags []string, rate float64) e
 	}
 }
 
-func (s statsd_connection) Timing(name string, value time.Duration, tags []string, rate float64) error {
+func (s statsdConnection) Timing(name string, value time.Duration, tags []string, rate float64) error {
 	if s.datadog {
 		return s.client.(*datadog.Client).Timing(name, value, tags, rate)
 	} else {

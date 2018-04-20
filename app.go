@@ -6,7 +6,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func s3b_flags() []cli.Flag {
+func s3bFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
 			Name:   "server, s",
@@ -74,18 +74,18 @@ func s3b_flags() []cli.Flag {
 	}
 }
 
-func s3b_action(c *cli.Context) error {
+func s3bAction(c *cli.Context) error {
 
 	// Initialize environment
-	test_matrix := initialize_environment(c)
+	testMatrix := initializeEnvironment(c)
 
 	// Run tests
 	for {
-		run_test(test_matrix)
+		runTest(testMatrix)
 	}
 }
 
-func s3b_app() *cli.App {
+func s3bApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "s3b"
 	app.Usage = "S3/Object Store benchmarking tool"
@@ -97,7 +97,7 @@ func s3b_app() *cli.App {
 			Email: "negronjl@xtremeghost.com",
 		},
 	}
-	app.Flags = s3b_flags()
-	app.Action = s3b_action
+	app.Flags = s3bFlags()
+	app.Action = s3bAction
 	return app
 }

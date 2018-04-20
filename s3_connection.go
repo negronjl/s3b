@@ -9,9 +9,9 @@ import (
 
 // Validates that the required environment variables
 // have been set.
-// Returns an s3_connection
+// Returns an s3Connection
 // On error, it log.Fatal an exits(1)
-func initialize_s3_connection(c *cli.Context) *s3_connection {
+func initializeS3Connection(c *cli.Context) *s3Connection {
 
 	// Debug information
 	debug := c.Bool("debug")
@@ -20,53 +20,53 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 	}
 
 	// S3 Server
-	s3_server := c.String("server")
-	if len(s3_server) < 1 {
+	s3Server := c.String("server")
+	if len(s3Server) < 1 {
 		cli.ShowAppHelp(c)
 		log.Fatalln("S3 server not defined!")
 	} else {
 		if debug {
-			log.Printf("S3 Server: %s", s3_server)
+			log.Printf("S3 Server: %s", s3Server)
 		}
 	}
 
 	// Most S3 servers need a region
-	s3_region := c.String("region")
-	if len(s3_region) < 1 {
+	s3Region := c.String("region")
+	if len(s3Region) < 1 {
 		cli.ShowAppHelp(c)
 		log.Fatalln("S3 region not defined!")
 	} else {
 		if debug {
-			log.Printf("S3 Region: %s", s3_region)
+			log.Printf("S3 Region: %s", s3Region)
 		}
 	}
 
 	// S3 Access Key
-	s3_access_key := c.String("access-key")
-	if len(s3_access_key) < 1 {
+	s3AccessKey := c.String("access-key")
+	if len(s3AccessKey) < 1 {
 		cli.ShowAppHelp(c)
 		log.Fatalln("S3 Access Key not defined!")
 	} else {
 		if debug {
-			log.Printf("S3 Access Key: %s", s3_access_key)
+			log.Printf("S3 Access Key: %s", s3AccessKey)
 		}
 	}
 
 	// S3 Secret Key
-	s3_secret_key := c.String("secret-key")
-	if len(s3_secret_key) < 1 {
+	s3SecretKey := c.String("secret-key")
+	if len(s3SecretKey) < 1 {
 		cli.ShowAppHelp(c)
 		log.Fatalln("S3 Secret Key not defined!")
 	} else {
 		if debug {
-			log.Printf("S3 Secret Key: %s", s3_secret_key)
+			log.Printf("S3 Secret Key: %s", s3SecretKey)
 		}
 	}
 
 	// API Signature
-	api_signature := c.String("api-signature")
+	apiSignature := c.String("api-signature")
 	if debug {
-		log.Printf("Using S3 Signature API: %s", api_signature)
+		log.Printf("Using S3 Signature API: %s", apiSignature)
 	}
 
 	// Are we connecting over SSL?
@@ -84,13 +84,13 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 	// Initialize minio client object.
 	minioClient := new(minio.Client)
 	var err error
-	switch api_signature {
+	switch apiSignature {
 	case "v2":
-		minioClient, err = minio.NewV2(s3_server, s3_access_key, s3_secret_key, ssl)
+		minioClient, err = minio.NewV2(s3Server, s3AccessKey, s3SecretKey, ssl)
 	case "v4":
-		minioClient, err = minio.NewV4(s3_server, s3_access_key, s3_secret_key, ssl)
+		minioClient, err = minio.NewV4(s3Server, s3AccessKey, s3SecretKey, ssl)
 	default:
-		minioClient, err = minio.New(s3_server, s3_access_key, s3_secret_key, ssl)
+		minioClient, err = minio.New(s3Server, s3AccessKey, s3SecretKey, ssl)
 	}
 	if err != nil {
 		log.Fatalln("Error connecting to S3 server.\n", err)
@@ -100,12 +100,12 @@ func initialize_s3_connection(c *cli.Context) *s3_connection {
 		}
 	}
 
-	return &s3_connection{
-		s3_server:     s3_server,
-		s3_region:     s3_region,
-		s3_access_key: s3_access_key,
-		s3_secret_key: s3_secret_key,
-		api_signature: api_signature,
-		ssl:           ssl,
-		minioClient:   minioClient}
+	return &s3Connection{
+		s3Server:     s3Server,
+		s3Region:     s3Region,
+		s3AccessKey:  s3AccessKey,
+		s3SecretKey:  s3SecretKey,
+		apiSignature: apiSignature,
+		ssl:          ssl,
+		minioClient:  minioClient}
 }
