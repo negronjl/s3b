@@ -83,7 +83,6 @@ func s3b_action(c *cli.Context) error {
 	for {
 		run_test(test_matrix)
 	}
-	return nil
 }
 
 func s3b_app() *cli.App {
